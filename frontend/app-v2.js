@@ -279,7 +279,7 @@ function initAccountMenu() {
   if (auth) {
     try {
       const user = JSON.parse(auth);
-      toggle.textContent = user.name.charAt(0).toUpperCase();
+      // Removed line overwriting icon with initial
       const nameEl = qs('.account-name');
       const metaEl = qs('.account-meta');
       if (nameEl) nameEl.textContent = user.name;

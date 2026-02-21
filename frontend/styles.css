@@ -109,6 +109,8 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: nowrap;
 }
 
 .nav-left {
@@ -139,8 +141,9 @@ a {
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  font-size: 0.85rem;
+  gap: 1.25rem;
+  font-size: 0.82rem;
+  flex-shrink: 0;
 }
 
 .nav-link {
@@ -173,7 +176,9 @@ a {
 .nav-right {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.85rem;
+  flex-shrink: 1;
+  justify-content: flex-end;
 }
 
 .nav-search-wrapper {
@@ -181,13 +186,15 @@ a {
 }
 
 .nav-search-input {
-  width: 260px;
+  width: 240px;
+  max-width: 100%;
   padding: 0.4rem 0.9rem 0.4rem 2.1rem;
   border-radius: var(--radius-pill);
   border: 1px solid var(--border-subtle);
   background: var(--bg-soft);
   font-size: 0.8rem;
   color: var(--text-main);
+  transition: width 0.3s ease;
 }
 
 .nav-search-input::placeholder {
@@ -265,9 +272,10 @@ a {
 }
 
 .avatar-pill svg {
-  width: 18px;
-  height: 18px;
-  opacity: 0.8;
+  width: 20px;
+  height: 20px;
+  opacity: 0.9;
+  fill: currentColor;
 }
 
 /* HEADERS */
@@ -1162,7 +1170,11 @@ a {
   transform: translateY(-6px) rotate(-45deg);
 }
 
-@media (max-width: 720px) {
+@media (max-width: 1100px) {
+  .nav-inner {
+    gap: 0.5rem;
+  }
+
   .hamburger-btn {
     display: block;
   }
@@ -1173,26 +1185,47 @@ a {
     top: 100%;
     left: 0;
     right: 0;
-    background: var(--bg-primary, #fff);
-    border-bottom: 1px solid var(--border-color, #e5e7eb);
+    background: var(--bg-elevated);
+    border-bottom: 1px solid var(--border-subtle);
     flex-direction: column;
-    padding: 0.75rem 1rem;
-    gap: 0.25rem;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    padding: 0.75rem 0;
+    gap: 0;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
     z-index: 200;
+  }
+
+  .nav-link {
+    width: 100%;
+    padding: 0.8rem 1.5rem;
+    border-radius: 0;
+  }
+
+  .nav-link::after {
+    display: none;
+  }
+
+  .nav-link.active {
+    background: var(--bg-soft);
+    color: var(--accent-green);
+    font-weight: 600;
   }
 
   .nav-mobile-open .nav-links {
     display: flex;
   }
 
-  .nav-link {
-    padding: 0.6rem 0.75rem;
-    border-radius: 8px;
+  .nav-search-input {
+    width: 160px;
+  }
+}
+
+@media (max-width: 640px) {
+  .logo-text {
+    display: none;
   }
 
-  .nav-header {
-    position: relative;
+  .nav-search-input {
+    width: 120px;
   }
 }
 
@@ -1545,4 +1578,103 @@ a {
 
 .search-hint.animate {
   animation: hint-bounce 2s infinite ease-in-out;
+}
+
+/* ── ABOUT PAGE ─────────────────────────────────────────────────────────── */
+.about-section {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.about-content {
+  line-height: 1.8;
+  font-size: 1.1rem;
+  color: var(--text-main);
+}
+
+.about-content p {
+  margin-bottom: 1.5rem;
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.team-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1rem;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.3s var(--ease-out);
+}
+
+.team-card:hover {
+  border-color: var(--accent-green);
+}
+
+.about-split-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+@media (max-width: 960px) {
+  .about-split-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+}
+
+.team-grid-sm {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+
+.team-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  margin: 0 auto 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.team-name {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text-bright);
+  margin-bottom: 0.25rem;
+}
+
+/* Avatar Colors */
+.av-atharva {
+  background: linear-gradient(135deg, #0f9e60, #16a34a);
+}
+
+.av-daksh {
+  background: linear-gradient(135deg, #3b6ef5, #2563eb);
+}
+
+.av-prajay {
+  background: linear-gradient(135deg, #e8960a, #d97706);
+}
+
+.av-saksham {
+  background: linear-gradient(135deg, #e53e3e, #dc2626);
 }
