@@ -556,40 +556,55 @@ document.addEventListener("DOMContentLoaded", async function () {
 function initSearchTutorial() {
   if (document.body.dataset.page !== 'dashboard') return;
 
-  // Show only once per session
-  if (sessionStorage.getItem('medistock-search-hint-shown')) return;
+  // Show only "first time ever" (localStorage)
+  if (localStorage.getItem('medistock-search-tutorial-done')) return;
 
   const wrapper = qs('.nav-search-wrapper');
   const input = qs('#global-search');
   if (!wrapper || !input) return;
 
+  // Create Overlay
+  const overlay = document.createElement('div');
+  overlay.className = 'search-tutorial-overlay';
+  document.body.appendChild(overlay);
+
+  // Create Hint Bubble
   const hint = document.createElement('div');
   hint.className = 'search-hint';
-  hint.innerHTML = '✨ Search inventory by product or category';
+  hint.innerHTML = '✨ Search through the <b>ML Dataset</b> here';
   wrapper.appendChild(hint);
 
   // Entrance delay
   setTimeout(() => {
+    overlay.classList.add('visible');
     hint.classList.add('visible');
     hint.classList.add('animate');
-    sessionStorage.setItem('medistock-search-hint-shown', 'true');
-  }, 1200);
+    input.classList.add('pulse');
+    localStorage.setItem('medistock-search-tutorial-done', 'true');
+  }, 1500);
 
   // Dismissal
   const dismiss = () => {
+    overlay.classList.remove('visible');
     hint.classList.remove('visible');
-    setTimeout(() => hint.remove(), 500);
+    input.classList.remove('pulse');
+    setTimeout(() => {
+      overlay.remove();
+      hint.remove();
+    }, 600);
     input.removeEventListener('focus', dismiss);
     document.removeEventListener('mousedown', checkOutside);
   };
 
   const checkOutside = (e) => {
-    if (!wrapper.contains(e.target)) dismiss();
+    // If they click on the overlay or anywhere outside, dismiss it too
+    if (overlay.contains(e.target) || !wrapper.contains(e.target)) dismiss();
   };
 
   input.addEventListener('focus', dismiss);
   document.addEventListener('mousedown', checkOutside);
 
-  // Auto-dismiss after 8s
-  setTimeout(dismiss, 8000);
+  // Auto-dismiss after 12s if they don't do anything
+  setTimeout(dismiss, 12000);
 }
+

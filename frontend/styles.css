@@ -1438,26 +1438,48 @@ a {
 /* ── SEARCH HINT TUTORIAL ────────────────────────────────────────────────── */
 .nav-search-wrapper {
   position: relative;
+  z-index: 201;
+}
+
+.search-tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+
+.search-tutorial-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .search-hint {
   position: absolute;
   top: calc(100% + 14px);
   left: 50%;
-  transform: translateX(-50%) translateY(-8px);
-  background: var(--accent-green);
-  color: white;
-  padding: 0.5rem 0.9rem;
-  border-radius: 12px;
-  font-size: 0.75rem;
-  font-family: 'Inter', sans-serif;
+  transform: translateX(-50%) translateY(-10px);
+  background: #ffffff;
+  color: var(--text-main);
+  padding: 0.8rem 1.2rem;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-family: 'Poppins', sans-serif;
   font-weight: 600;
   white-space: nowrap;
   pointer-events: none;
   opacity: 0;
   transition: all 0.5s var(--ease-spring);
-  box-shadow: 0 8px 24px rgba(15, 158, 96, 0.2);
-  z-index: 200;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25), 0 0 0 1px var(--border-subtle);
+  z-index: 210;
+}
+
+.search-hint b {
+  color: var(--accent-green);
+  font-weight: 700;
 }
 
 .search-hint::before {
@@ -1466,14 +1488,32 @@ a {
   bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-bottom: 6px solid var(--accent-green);
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid #ffffff;
 }
 
 .search-hint.visible {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
+}
+
+.nav-search-input.pulse {
+  border-color: var(--accent-green) !important;
+  box-shadow: 0 0 0 4px rgba(15, 158, 96, 0.15) !important;
+  animation: search-focus-pulse 2s infinite ease-in-out;
+}
+
+@keyframes search-focus-pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.02);
+  }
 }
 
 @keyframes hint-bounce {
@@ -1484,7 +1524,7 @@ a {
   }
 
   50% {
-    transform: translateX(-50%) translateY(4px);
+    transform: translateX(-50%) translateY(5px);
   }
 }
 
