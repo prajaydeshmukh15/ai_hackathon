@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediStock AI - Predict</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="app-v2.js"></script>
+
+</head>
+
+<body data-page="predict">
+  <script>
+    (function () {
+      const auth = localStorage.getItem('medistock-auth');
+      if (!auth) window.location.href = 'login.html';
+    })();
+  </script>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-left">
+        <img class="logo-img" src="assets/medistock-logo.svg" alt="MediStock AI logo" width="36" height="36">
+        <div class="logo-text">MediStock AI</div>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link" data-nav="dashboard">Dashboard</a>
+        <a href="prediction.html" class="nav-link" data-nav="predict">Predict</a>
+        <a href="analytics.html" class="nav-link" data-nav="analytics">Analytics</a>
+        <a href="risky.html" class="nav-link" data-nav="risky">At-Risk Stock</a>
+      </nav>
+      <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-right">
+        <div class="nav-search-wrapper">
+          <span class="nav-search-icon">
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+              <path d="m21 21-4.35-4.35M19 11a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z" />
+            </svg>
+          </span>
+          <input class="nav-search-input" id="global-search" type="text" placeholder="Search products, batches...">
+        </div>
+        <div class="notif-wrapper" id="notif-wrapper">
+          <button class="icon-btn notif-btn" id="notif-btn" aria-label="Notifications" aria-expanded="false">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+              <path
+                d="M9.354 21c.705.622 1.632 1 2.646 1s1.94-.378 2.646-1M18 8A6 6 0 1 0 6 8c0 3.09-.78 5.206-1.65 6.605-.735 1.18-1.102 1.771-1.089 1.936.015.182.054.252.2.36.133.099.732.099 1.928.099H18.61c1.196 0 1.795 0 1.927-.098.147-.11.186-.179.2-.361.014-.165-.353-.755-1.088-1.936C18.78 13.206 18 11.09 18 8Z" />
+            </svg>
+            <span class="notif-badge" id="notif-badge">3</span>
+          </button>
+          <div class="notif-dropdown" id="notif-dropdown">
+            <div class="notif-header">
+              <span class="notif-title">Notifications</span>
+              <button class="notif-clear" id="notif-clear">Mark all read</button>
+            </div>
+            <ul class="notif-list" id="notif-list"></ul>
+          </div>
+        </div>
+        <div class="account-dropdown">
+          <button class="avatar-pill" id="account-toggle">?</button>
+          <div class="account-menu" id="account-menu">
+            <div class="account-info">
+              <div class="account-name" id="account-name">–</div>
+              <div class="account-meta" id="account-region">–</div>
+            </div>
+            <hr class="menu-divider">
+            <button class="menu-item" id="logout-btn">
+              <svg viewBox="0 0 24 24" width="16" height="16"
+                style="margin-right:0.4rem;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:middle"
+                aria-hidden="true">
+                <path
+                  d="m16 17 5-5m0 0-5-5m5 5H9m0-9H7.8c-1.68 0-2.52 0-3.162.327a3 3 0 0 0-1.311 1.311C3 5.28 3 6.12 3 7.8v8.4c0 1.68 0 2.52.327 3.162a3 3 0 0 0 1.311 1.311C5.28 21 6.12 21 7.8 21H9" />
+              </svg> Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main class="section">
+    <div class="container">
+      <header class="page-header reveal">
+        <h1 class="page-title">Live Batch Prediction</h1>
+        <p class="page-subtitle">Enter batch metrics below — predictions run against the last 30 days of movement data.
+        </p>
+      </header>
+
+      <section class="grid-2">
+        <article class="card reveal">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Batch Intelligence</div>
+              <div class="card-subtitle">Enter batch metrics to predict dead‑stock risk.</div>
+            </div>
+          </div>
+          <form id="predict-form" class="predict-form">
+            <div class="form-field">
+              <label>Category or Product ID</label>
+              <input name="identifier" type="text" placeholder="e.g. Painkiller or P0011">
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Days in Stock</label>
+                <input name="daysinstock" type="number" min="0" value="0" required>
+              </div>
+              <div class="form-field">
+                <label>Quantity</label>
+                <input name="stockqty" type="number" min="0" value="0" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Avg. Weekly Sales</label>
+                <input name="weeklysales30d" type="number" min="0" value="0" required>
+              </div>
+              <div class="form-field">
+                <label>Prev. Discounts</label>
+                <input name="discountstried" type="number" min="0" value="0" required>
+              </div>
+            </div>
+            <div class="form-field">
+              <label>Season Match Score</label>
+              <input name="seasonmatch" type="number" min="0" max="2" step="0.01" value="1" required>
+            </div>
+            <button class="btn btn-primary" type="submit">Predict Risk</button>
+          </form>
+        </article>
+        <article class="card reveal">
+          <div class="prediction-panel" id="prediction-panel">
+            <div class="prediction-empty" id="prediction-empty">
+              <div class="empty-icon ui-icon"><svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M12 9v4m0 4h.01M10.615 3.892 2.39 18.098c-.456.788-.684 1.182-.65 1.506a1 1 0 0 0 .406.705c.263.191.718.191 1.629.191h16.45c.91 0 1.365 0 1.628-.191a1 1 0 0 0 .407-.705c.034-.324-.195-.718-.65-1.506L13.383 3.892c-.454-.785-.681-1.178-.978-1.31a1 1 0 0 0-.813 0c-.296.132-.523.525-.978 1.31Z" />
+                </svg></div>
+              <h3>No Prediction Yet</h3>
+              <p>Enter batch details to generate an AI risk assessment and action plan.</p>
+            </div>
+            <div class="prediction-result" id="prediction-result" style="display:none;">
+              <h3>Prediction Summary</h3>
+              <p class="pred-score">Dead‑stock probability: <strong id="pred-prob">–</strong></p>
+              <p id="pred-label"></p>
+              <p>Expected days until dead stock: <strong id="pred-days">–</strong></p>
+              <p id="pred-tone" style="margin-top:0.6rem;font-size:0.85rem;"></p>
+            </div>
+            <div class="what-if-simulator" id="what-if-sim"
+              style="display:none; margin-top:1rem; padding:1.1rem 1.2rem; background:var(--bg-soft); border-radius:14px; border:1px solid var(--risk-critical-border);">
+              <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;">
+                <div
+                  style="width:32px;height:32px;background:var(--risk-critical-bg);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--risk-critical);flex-shrink:0;">
+                  <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path
+                      d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4m0 0H5a2 2 0 0 1-2-2v-4m0 0h18" />
+                  </svg>
+                </div>
+                <div>
+                  <div style="font-weight:650;color:var(--text-bright);font-size:0.9rem;">What-If Simulator</div>
+                  <div style="font-size:0.78rem;color:var(--text-muted);">Adjust discount — see live risk impact</div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:1rem;">
+                <input id="discount-slider" type="range" min="0" max="50" value="18"
+                  style="flex:1;height:5px;border-radius:3px;cursor:pointer;accent-color:var(--accent-green);">
+                <span id="discount-value"
+                  style="min-width:3rem;font-family:monospace;color:var(--text-bright);font-weight:650;text-align:right;">18%</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem;">
+                <div
+                  style="position:relative;height:7px;background:var(--border-subtle);border-radius:4px;flex:1;margin-right:1rem;overflow:hidden;">
+                  <div id="risk-original-bar"
+                    style="position:absolute;left:0;top:0;height:100%;background:var(--risk-critical);width:87%;border-radius:4px;">
+                  </div>
+                  <div id="risk-new-bar"
+                    style="position:absolute;left:0;top:0;height:100%;background:var(--risk-safe);width:60%;border-radius:4px;">
+                  </div>
+                </div>
+                <div style="text-align:right;">
+                  <div style="font-size:0.78rem;color:var(--text-muted);">87% →</div>
+                  <div style="font-weight:650;color:var(--risk-safe);" id="risk-new-label">60% (-27%)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+      <section class="section">
+    </div>
+  </main>
+  <script src="app-v2.js"></script>
+</body>
+
+</html>

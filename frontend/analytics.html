@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediStock AI - Analytics</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="app-v2.js"></script>
+
+</head>
+
+<body data-page="analytics">
+  <script>
+    (function () {
+      const auth = localStorage.getItem('medistock-auth');
+      if (!auth) window.location.href = 'login.html';
+    })();
+  </script>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-left">
+        <img class="logo-img" src="assets/medistock-logo.svg" alt="MediStock AI logo" width="36" height="36">
+        <div class="logo-text">MediStock AI</div>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link" data-nav="dashboard">Dashboard</a>
+        <a href="prediction.html" class="nav-link" data-nav="predict">Predict</a>
+        <a href="analytics.html" class="nav-link" data-nav="analytics">Analytics</a>
+        <a href="risky.html" class="nav-link" data-nav="risky">At-Risk Stock</a>
+      </nav>
+      <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-right">
+        <div class="nav-search-wrapper">
+          <span class="nav-search-icon">
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+              <path d="m21 21-4.35-4.35M19 11a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z" />
+            </svg>
+          </span>
+          <input class="nav-search-input" id="global-search" type="text" placeholder="Search products, batches..." />
+        </div>
+        <div class="notif-wrapper" id="notif-wrapper">
+          <button class="icon-btn notif-btn" id="notif-btn" aria-label="Notifications" aria-expanded="false">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+              <path
+                d="M9.354 21c.705.622 1.632 1 2.646 1s1.94-.378 2.646-1M18 8A6 6 0 1 0 6 8c0 3.09-.78 5.206-1.65 6.605-.735 1.18-1.102 1.771-1.089 1.936.015.182.054.252.2.36.133.099.732.099 1.928.099H18.61c1.196 0 1.795 0 1.927-.098.147-.11.186-.179.2-.361.014-.165-.353-.755-1.088-1.936C18.78 13.206 18 11.09 18 8Z" />
+            </svg>
+            <span class="notif-badge" id="notif-badge">3</span>
+          </button>
+          <div class="notif-dropdown" id="notif-dropdown">
+            <div class="notif-header">
+              <span class="notif-title">Notifications</span>
+              <button class="notif-clear" id="notif-clear">Mark all read</button>
+            </div>
+            <ul class="notif-list" id="notif-list"></ul>
+          </div>
+        </div>
+
+        <div class="account-dropdown">
+          <button class="avatar-pill" id="account-toggle">?</button>
+          <div class="account-menu" id="account-menu">
+            <div class="account-info">
+              <div class="account-name" id="account-name">–</div>
+              <div class="account-meta" id="account-region">–</div>
+            </div>
+            <hr class="menu-divider">
+            <button class="menu-item" id="logout-btn">
+              <svg viewBox="0 0 24 24" width="16" height="16"
+                style="margin-right:0.4rem;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:middle"
+                aria-hidden="true">
+                <path
+                  d="m16 17 5-5m0 0-5-5m5 5H9m0-9H7.8c-1.68 0-2.52 0-3.162.327a3 3 0 0 0-1.311 1.311C3 5.28 3 6.12 3 7.8v8.4c0 1.68 0 2.52.327 3.162a3 3 0 0 0 1.311 1.311C5.28 21 6.12 21 7.8 21H9" />
+              </svg> Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main class="section">
+    <div class="container">
+      <header class="page-header reveal">
+        <h1 class="page-title">Risk Analytics</h1>
+        <p class="page-subtitle">Dead-stock risk distribution across all warehouses — refreshed from live inventory
+          data.</p>
+      </header>
+
+      <article class="card reveal">
+        <div class="card-header">
+          <div class="card-title">Warehouse Risk Distribution</div>
+          <div class="legend">
+            <span style="color:var(--risk-safe);font-weight:600;"><span class="dot safe"
+                style="background:var(--risk-safe);"></span>Safe</span>
+            <span style="color:var(--risk-medium);font-weight:600;"><span class="dot medium"
+                style="background:var(--risk-medium);"></span>Medium</span>
+            <span style="color:var(--risk-high);font-weight:600;"><span class="dot high"
+                style="background:var(--risk-high);"></span>High</span>
+            <span style="color:var(--risk-critical);font-weight:600;"><span class="dot critical"
+                style="background:var(--risk-critical);"></span>Critical</span>
+          </div>
+        </div>
+        <div id="pie-charts-container"
+          style="display: flex; justify-content: space-around; align-items: center; padding: 2rem 1rem; gap: 2rem; flex-wrap: wrap;">
+          <!-- Pie charts will be dynamically rendered here -->
+        </div>
+      </article>
+
+      <style>
+        .pie-chart-wrapper {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 1rem;
+        }
+
+        .pie-chart-title {
+          font-size: 1rem;
+          font-weight: 600;
+          color: var(--text-main);
+        }
+
+        .pie-chart-svg {
+          filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
+        }
+
+        .pie-slice {
+          transition: transform 0.2s ease, opacity 0.2s ease;
+          cursor: pointer;
+        }
+
+        .pie-slice:hover {
+          transform: scale(1.05);
+          opacity: 0.9;
+        }
+
+        .pie-tooltip {
+          position: absolute;
+          background: #ffffff;
+          color: var(--text-main);
+          border: 1px solid var(--border-subtle);
+          padding: 0.65rem 0.9rem;
+          border-radius: 10px;
+          font-size: 0.82rem;
+          pointer-events: none;
+          opacity: 0;
+          transition: opacity 0.18s ease;
+          z-index: 1000;
+          box-shadow: 0 4px 16px rgba(15, 158, 96, 0.12), 0 1px 4px rgba(0, 0, 0, 0.06);
+          white-space: nowrap;
+        }
+
+        .pie-tooltip.visible {
+          opacity: 1;
+        }
+
+        .pie-percentage {
+          font-size: 0.75rem;
+          font-weight: 600;
+          fill: white;
+          pointer-events: none;
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Hover scale transition — runs after the entrance animation sets transition */
+        .pie-slice {
+          will-change: transform, opacity;
+          cursor: pointer;
+        }
+      </style>
+
+      <script>
+        // Fetch heatmap data and render pie charts
+        async function loadHeatmapData() {
+          try {
+            const response = await fetch('/api/analytics/heatmap');
+            const data = await response.json();
+            renderPieCharts(data);
+          } catch (error) {
+            console.error('Failed to load heatmap data:', error);
+            // Fallback to demo data
+            const demoData = {
+              "Delhi": { "safe": 150, "medium": 80, "high": 60, "critical": 30 },
+              "Mumbai": { "safe": 120, "medium": 90, "high": 70, "critical": 40 },
+              "Chennai": { "safe": 100, "medium": 85, "high": 95, "critical": 35 }
+            };
+            renderPieCharts(demoData);
+          }
+        }
+
+        function renderPieCharts(data) {
+          const container = document.getElementById('pie-charts-container');
+          container.innerHTML = '';
+
+          // Remove stale tooltips to avoid duplicates on re-render
+          document.querySelectorAll('.pie-tooltip').forEach(t => t.remove());
+          const tooltip = document.createElement('div');
+          tooltip.className = 'pie-tooltip';
+          document.body.appendChild(tooltip);
+
+          const colors = {
+            safe: '#16a34a',
+            medium: '#f59e0b',
+            high: '#f97316',
+            critical: '#ef4444'
+          };
+
+          // ── SWEEP ANIMATION ──────────────────────────────────────────────
+          // Frame A: clipPath wedge = single point (0% visible)
+          // Frame B: clipPath wedge = full circle  (100% visible)
+          // Easing: ease-in-out over 1500ms
+          function animatePieSweep(svg, cx, cy, labels, chartDelay) {
+            const CLIP_R = 200;
+            const DURATION = 1500;
+            const clipId = 'pie-clip-' + Math.random().toString(36).slice(2, 9);
+
+            const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+            const clipPath = document.createElementNS('http://www.w3.org/2000/svg', 'clipPath');
+            clipPath.setAttribute('id', clipId);
+
+            const clipWedge = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            clipWedge.setAttribute('d', `M ${cx} ${cy}`); // Frame A — nothing visible
+            clipPath.appendChild(clipWedge);
+            defs.appendChild(clipPath);
+            svg.insertBefore(defs, svg.firstChild);
+
+            // Wrap all slices + labels in a clipped group
+            const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            group.setAttribute('clip-path', `url(#${clipId})`);
+            Array.from(svg.childNodes)
+              .filter(n => n !== defs)
+              .forEach(n => group.appendChild(n));
+            svg.appendChild(group);
+
+            function easeInOut(t) {
+              return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+            }
+
+            function sweepWedge(progress) {
+              if (progress <= 0) return `M ${cx} ${cy}`;
+              if (progress >= 1) return 'M 0 0 H 200 V 200 H 0 Z'; // Frame B — full coverage
+
+              const startRad = -Math.PI / 2; // top of circle
+              const endRad = startRad + progress * 2 * Math.PI;
+              const x0 = cx + CLIP_R * Math.cos(startRad);
+              const y0 = cy + CLIP_R * Math.sin(startRad);
+              const x1 = cx + CLIP_R * Math.cos(endRad);
+              const y1 = cy + CLIP_R * Math.sin(endRad);
+              const largeArc = progress > 0.5 ? 1 : 0;
+
+              return `M ${cx} ${cy} L ${x0} ${y0} A ${CLIP_R} ${CLIP_R} 0 ${largeArc} 1 ${x1} ${y1} Z`;
+            }
+
+            let startTime = null;
+            function frame(now) {
+              if (startTime === null) startTime = now;
+              const rawT = Math.min((now - startTime) / DURATION, 1);
+              const t = easeInOut(rawT);
+              clipWedge.setAttribute('d', sweepWedge(t));
+              if (rawT < 1) {
+                requestAnimationFrame(frame);
+              } else {
+                // Fade in percentage labels once sweep is done
+                labels.forEach(text => { text.style.opacity = '1'; });
+              }
+            }
+
+            setTimeout(() => requestAnimationFrame(frame), chartDelay);
+          }
+
+          // ── Render charts ────────────────────────────────────────────────
+          Object.entries(data).forEach(([warehouse, risks], chartIndex) => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'pie-chart-wrapper';
+
+            const title = document.createElement('div');
+            title.className = 'pie-chart-title';
+            title.textContent = warehouse;
+            wrapper.appendChild(title);
+
+            const total = risks.safe + risks.medium + risks.high + risks.critical;
+            const radius = 80;
+            const centerX = 100;
+            const centerY = 100;
+
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('width', '200');
+            svg.setAttribute('height', '200');
+            svg.setAttribute('viewBox', '0 0 200 200');
+            svg.classList.add('pie-chart-svg');
+
+
+            const labels = [];
+            let currentAngle = -90;
+
+            Object.entries(risks).forEach(([category, count]) => {
+              if (count === 0) return;
+
+              const percentage = (count / total) * 100;
+              const sliceAngle = (count / total) * 360;
+              const startAngle = currentAngle * (Math.PI / 180);
+              const endAngle = (currentAngle + sliceAngle) * (Math.PI / 180);
+
+              const x1 = centerX + radius * Math.cos(startAngle);
+              const y1 = centerY + radius * Math.sin(startAngle);
+              const x2 = centerX + radius * Math.cos(endAngle);
+              const y2 = centerY + radius * Math.sin(endAngle);
+
+              const pathData = [
+                `M ${centerX} ${centerY}`,
+                `L ${x1} ${y1}`,
+                `A ${radius} ${radius} 0 ${sliceAngle > 180 ? 1 : 0} 1 ${x2} ${y2}`,
+                'Z'
+              ].join(' ');
+
+              const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+              path.setAttribute('d', pathData);
+              path.setAttribute('fill', colors[category]);
+              path.classList.add('pie-slice');
+
+              path.addEventListener('mouseenter', () => {
+                tooltip.innerHTML = `<strong>${warehouse} — ${category.charAt(0).toUpperCase() + category.slice(1)}</strong><br>Count: ${count}<br>Percentage: ${percentage.toFixed(1)}%`;
+                tooltip.classList.add('visible');
+              });
+              path.addEventListener('mousemove', e => {
+                tooltip.style.left = (e.pageX + 15) + 'px';
+                tooltip.style.top = (e.pageY + 15) + 'px';
+              });
+              path.addEventListener('mouseleave', () => tooltip.classList.remove('visible'));
+
+              svg.appendChild(path);
+
+              if (percentage > 8) {
+                const midAngle = (currentAngle + sliceAngle / 2) * (Math.PI / 180);
+                const textR = radius * 0.65;
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', centerX + textR * Math.cos(midAngle));
+                text.setAttribute('y', centerY + textR * Math.sin(midAngle));
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('dominant-baseline', 'middle');
+                text.classList.add('pie-percentage');
+                text.textContent = `${percentage.toFixed(0)}%`;
+                text.style.opacity = '0';
+                text.style.transition = 'opacity 0.4s ease 0.1s';
+                svg.appendChild(text);
+                labels.push(text);
+              }
+
+              currentAngle += sliceAngle;
+            });
+
+            wrapper.appendChild(svg);
+            container.appendChild(wrapper);
+
+            // 🎬 Sweep animation — stagger each chart by 200ms
+            animatePieSweep(svg, centerX, centerY, labels, chartIndex * 200);
+          });
+        }
+
+
+        // Load data when page loads
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', loadHeatmapData);
+        } else {
+          loadHeatmapData();
+        }
+      </script>
+      <section class="section">
+        <div class="card reveal">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Search the dataset</div>
+              <div class="card-subtitle">
+                Use the search bar in the header to find products by ID or category.
+              </div>
+            </div>
+          </div>
+          <div id="search-results-inline" class="search-results"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+  <script src="app-v2.js"></script>
+</body>
+
+</html>

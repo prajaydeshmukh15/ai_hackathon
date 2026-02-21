@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediStock AI - Login</title>
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1e293b;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+            padding: 40px 32px;
+        }
+
+        .login-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 48px 40px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-mark {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            font-weight: 700;
+            color: white;
+            margin: 0 auto 16px;
+            box-shadow: 0 10px 30px rgba(22, 163, 74, 0.25);
+        }
+
+        .logo-text {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-subtitle {
+            color: #64748b;
+            font-size: 16px;
+            margin-top: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 28px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #475569;
+            font-weight: 500;
+        }
+
+        input,
+        select {
+            width: 100%;
+            height: 56px;
+            padding: 0 20px;
+            background: #f1f5f9;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            color: #1e293b;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input::placeholder {
+            color: #94a3b8;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #16a34a;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+        }
+
+        /* SELECT DROPDOWN FIX FOR LIGHT THEME */
+        #loginForm select:focus {
+            outline: none !important;
+            border-color: #16a34a !important;
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1) !important;
+        }
+
+        #loginForm select {
+            color: #1e293b !important;
+        }
+
+        #loginForm select option {
+            background: #ffffff !important;
+            color: #1e293b !important;
+            padding: 8px !important;
+        }
+
+        .login-btn {
+            width: 100%;
+            height: 60px;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 12px;
+            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3);
+        }
+
+        .login-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(22, 163, 74, 0.4);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            display: none;
+        }
+
+        .message.success {
+            background: rgba(22, 163, 74, 0.1);
+            color: #15803d;
+            border: 1px solid #16a34a;
+        }
+
+        .message.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+            border: 1px solid #ef4444;
+        }
+
+        .dna-loader {
+            text-align: center;
+            padding: 50px 0;
+            display: none;
+            color: #1e293b;
+        }
+
+        .dna-helix {
+            width: 80px;
+            height: 140px;
+            margin: 0 auto 25px;
+            position: relative;
+        }
+
+        .dna-strand {
+            position: absolute;
+            width: 6px;
+            height: 50px;
+            background: linear-gradient(#16a34a, #22c55e);
+            border-radius: 3px;
+            animation: helixMove 2s ease-in-out infinite;
+        }
+
+        .strand-left {
+            left: 10px;
+        }
+
+        .strand-right {
+            right: 10px;
+            animation-direction: reverse;
+            animation-delay: -1s;
+        }
+
+        @keyframes helixMove {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(50px) rotate(180deg);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-card {
+                margin: 20px;
+                padding: 40px 24px;
+            }
+        }
+
+        /* ── LOADING SCREEN ──────────────────────────────────────────────────── */
+        #ms-loader {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            background: linear-gradient(160deg, #f6faf7 0%, #eef4f0 55%, #e8f0ea 100%);
+            opacity: 1;
+            transition: opacity 480ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #ms-loader.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Logo + spinning ring wrapper */
+        .loader-ring-wrap {
+            position: relative;
+            width: 96px;
+            height: 96px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 22px;
+        }
+
+        /* SVG spinner ring */
+        .loader-ring {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            animation: spin-ring 1.4s linear infinite;
+        }
+
+        .loader-ring circle {
+            fill: none;
+            stroke: #0f9e60;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-dasharray: 220;
+            stroke-dashoffset: 160;
+            opacity: 0.85;
+        }
+
+        @keyframes spin-ring {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Logo image inside the ring */
+        .loader-logo-img {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: block;
+            animation: logo-breathe 2.2s ease-in-out infinite;
+        }
+
+        @keyframes logo-breathe {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.04);
+                opacity: 0.9;
+            }
+        }
+
+        /* Brand name */
+        .loader-name {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            color: #0d1f14;
+            margin-bottom: 32px;
+            opacity: 0;
+            animation: fade-in-up 420ms ease forwards 300ms;
+        }
+
+        .loader-tagline {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #5e7268;
+            margin-top: -28px;
+            margin-bottom: 32px;
+            opacity: 0;
+            animation: fade-in-up 420ms ease forwards 500ms;
+        }
+
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Progress bar at bottom */
+        .loader-bar-track {
+            width: 160px;
+            height: 3px;
+            background: rgba(15, 158, 96, 0.15);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .loader-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #0f9e60, #11b96e);
+            border-radius: 999px;
+            animation: fill-bar 2s cubic-bezier(0.4, 0, 0.2, 1) forwards 100ms;
+        }
+
+        @keyframes fill-bar {
+            0% {
+                width: 0%;
+            }
+
+            60% {
+                width: 72%;
+            }
+
+            85% {
+                width: 88%;
+            }
+
+            100% {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ── LOADING SCREEN ─────────────────────────────────────────────────── -->
+    <div id="ms-loader" role="status" aria-label="Loading MediStock AI">
+        <div class="loader-ring-wrap">
+            <!-- Spinning ring -->
+            <svg class="loader-ring" viewBox="0 0 96 96" aria-hidden="true">
+                <circle cx="48" cy="48" r="44" />
+            </svg>
+            <!-- Logo -->
+            <img class="loader-logo-img" src="assets/medistock-logo.svg" alt="" aria-hidden="true">
+        </div>
+        <div class="loader-name">MediStock AI</div>
+        <div class="loader-tagline">Inventory Intelligence Platform</div>
+        <div class="loader-bar-track">
+            <div class="loader-bar-fill"></div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            var loader = document.getElementById('ms-loader');
+            if (!loader) return;
+
+            // Dismiss after 2.2s — fade out, then remove from DOM
+            var DISMISS = 2200;
+
+            function dismiss() {
+                loader.classList.add('fade-out');
+                // Remove from DOM after transition completes (480ms)
+                loader.addEventListener('transitionend', function onEnd() {
+                    loader.removeEventListener('transitionend', onEnd);
+                    if (loader.parentNode) loader.parentNode.removeChild(loader);
+                });
+            }
+
+            // Start countdown
+            var timer = setTimeout(dismiss, DISMISS);
+
+            // If user interaction happens early, dismiss immediately
+            loader.addEventListener('click', function () {
+                clearTimeout(timer);
+                dismiss();
+            });
+        })();
+    </script>
+
+    <div class="login-container">
+        <div class="login-card">
+            <div class="logo">
+                <img class="logo-img" src="assets/medistock-logo.svg" alt="MediStock AI logo"
+                    style="width:88px;height:88px;border-radius:22px;display:block;margin:0 auto 16px;box-shadow:0 10px 30px rgba(15,158,96,0.30);">
+                <div class="logo-text">MediStock AI</div>
+                <div class="logo-subtitle">Internal Inventory Management System</div>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Employee ID</label>
+                    <input type="text" id="empId" required maxlength="10" placeholder="EMP-2124">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label>Region</label>
+                    <select id="region" required>
+                        <option value="">Select Region</option>
+                        <option value="Central">Central</option>
+                        <option value="East">East</option>
+                        <option value="West">West</option>
+                        <option value="South">South</option>
+                        <option value="North">North</option>
+                    </select>
+                </div>
+                <button type="submit" id="loginBtn" class="login-btn">Secure Login</button>
+            </form>
+
+            <div id="message" class="message"></div>
+            <div id="dnaLoader" class="dna-loader">
+                <div class="dna-helix">
+                    <div class="dna-strand strand-left"></div>
+                    <div class="dna-strand strand-right"></div>
+                </div>
+                <p>Authenticating DNA Sequence...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const empId = document.getElementById('empId').value.trim();
+            const password = document.getElementById('password').value;
+            const region = document.getElementById('region').value;
+            const btn = document.getElementById('loginBtn');
+            const loader = document.getElementById('dnaLoader');
+            const message = document.getElementById('message');
+
+            if (!empId || !password || !region || !/^EMP-\d{4}$/.test(empId)) {
+                showMessage('Invalid format: EMP-XXXX required', 'error');
+                return;
+            }
+
+            loader.style.display = 'block';
+            btn.disabled = true;
+            message.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ empId, password, region })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('medistock-auth', JSON.stringify(data.user));
+                    window.location.href = 'index.html'; // GO TO DASHBOARD
+                } else {
+                    throw new Error(data.detail || 'Login failed');
+                }
+            } catch (error) {
+                showMessage(error.message, 'error');
+            } finally {
+                loader.style.display = 'none';
+                btn.disabled = false;
+            }
+        });
+
+        function showMessage(text, type) {
+            const message = document.getElementById('message');
+            message.textContent = text;
+            message.className = `message ${type}`;
+            message.style.display = 'block';
+            setTimeout(() => message.style.display = 'none', 5000);
+        }
+    </script>
+
+</body>
+
+</html>

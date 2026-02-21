@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediStock AI - Risky Batches</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="app-v2.js"></script>
+
+</head>
+
+<body data-page="risky">
+  <script>
+    (function () {
+      const auth = localStorage.getItem('medistock-auth');
+      if (!auth) window.location.href = 'login.html';
+    })();
+  </script>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-left">
+        <img class="logo-img" src="assets/medistock-logo.svg" alt="MediStock AI logo" width="36" height="36">
+
+
+        <div class="logo-text">MediStock AI</div>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link" data-nav="dashboard">Dashboard</a>
+        <a href="prediction.html" class="nav-link" data-nav="predict">Predict</a>
+        <a href="analytics.html" class="nav-link" data-nav="analytics">Analytics</a>
+        <a href="risky.html" class="nav-link" data-nav="risky">At-Risk Stock</a>
+      </nav>
+      <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-right">
+        <div class="nav-search-wrapper">
+          <span class="nav-search-icon">
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+              <path d="m21 21-4.35-4.35M19 11a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z" />
+            </svg>
+          </span>
+          <input class="nav-search-input" id="global-search" type="text" placeholder="Search products, batches...">
+        </div>
+        <div class="notif-wrapper" id="notif-wrapper">
+          <button class="icon-btn notif-btn" id="notif-btn" aria-label="Notifications" aria-expanded="false">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+              <path
+                d="M9.354 21c.705.622 1.632 1 2.646 1s1.94-.378 2.646-1M18 8A6 6 0 1 0 6 8c0 3.09-.78 5.206-1.65 6.605-.735 1.18-1.102 1.771-1.089 1.936.015.182.054.252.2.36.133.099.732.099 1.928.099H18.61c1.196 0 1.795 0 1.927-.098.147-.11.186-.179.2-.361.014-.165-.353-.755-1.088-1.936C18.78 13.206 18 11.09 18 8Z" />
+            </svg>
+            <span class="notif-badge" id="notif-badge">3</span>
+          </button>
+          <div class="notif-dropdown" id="notif-dropdown">
+            <div class="notif-header">
+              <span class="notif-title">Notifications</span>
+              <button class="notif-clear" id="notif-clear">Mark all read</button>
+            </div>
+            <ul class="notif-list" id="notif-list"></ul>
+          </div>
+        </div>
+        <div class="account-dropdown">
+          <button class="avatar-pill" id="account-toggle">?</button>
+          <div class="account-menu" id="account-menu">
+            <div class="account-info">
+              <div class="account-name" id="account-name">–</div>
+              <div class="account-meta" id="account-region">–</div>
+            </div>
+            <hr class="menu-divider">
+            <button class="menu-item" id="logout-btn">
+              <svg viewBox="0 0 24 24" width="16" height="16"
+                style="margin-right:0.4rem;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:middle"
+                aria-hidden="true">
+                <path
+                  d="m16 17 5-5m0 0-5-5m5 5H9m0-9H7.8c-1.68 0-2.52 0-3.162.327a3 3 0 0 0-1.311 1.311C3 5.28 3 6.12 3 7.8v8.4c0 1.68 0 2.52.327 3.162a3 3 0 0 0 1.311 1.311C5.28 21 6.12 21 7.8 21H9" />
+              </svg> Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main class="section">
+    <div class="container">
+      <header class="page-header reveal">
+        <h1 class="page-title">Stock Risk Monitor</h1>
+        <p class="page-subtitle">Batches flagged by the risk model — sorted by urgency. Last synced from live inventory.
+        </p>
+      </header>
+      <section class="card reveal">
+        <div class="card-header">
+          <div class="card-title">At-Risk Batches — Elevated Score</div>
+          <div class="batch-filter">
+            <input id="risky-filter" type="text" placeholder="Filter batches..." />
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Batch ID</th>
+                <th>Product Name</th>
+                <th>Risk Level</th>
+                <th>Value</th>
+                <th>Warehouse</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="risky-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+  <script src="app-v2.js"></script>
+</body>
+
+</html>

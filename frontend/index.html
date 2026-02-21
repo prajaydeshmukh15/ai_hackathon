@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — MediStock AI</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="app-v2.js"></script>
+
+</head>
+
+<body data-page="dashboard">
+  <script>
+    (function () {
+      const auth = localStorage.getItem('medistock-auth');
+      if (!auth) {
+        window.location.href = 'login.html';
+      }
+    })();
+  </script>
+  <div class="dash-ambient">
+    <div class="dash-orb orb-blue"></div>
+    <div class="dash-orb orb-green"></div>
+  </div>
+
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-left">
+        <img class="logo-img" src="assets/medistock-logo.svg" alt="MediStock AI logo" width="36" height="36">
+        <div class="logo-text">MediStock AI</div>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link" data-nav="dashboard">Dashboard</a>
+        <a href="prediction.html" class="nav-link" data-nav="predict">Predict</a>
+        <a href="analytics.html" class="nav-link" data-nav="analytics">Analytics</a>
+        <a href="risky.html" class="nav-link" data-nav="risky">At-Risk Stock</a>
+      </nav>
+      <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-right">
+        <div class="nav-search-wrapper">
+          <span class="nav-search-icon">
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+              <path d="m21 21-4.35-4.35M19 11a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z" />
+            </svg>
+          </span>
+          <input class="nav-search-input" id="global-search" type="text" placeholder="Search products, batches...">
+        </div>
+        <div class="notif-wrapper" id="notif-wrapper">
+          <button class="icon-btn notif-btn" id="notif-btn" aria-label="Notifications" aria-expanded="false">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+              <path
+                d="M9.354 21c.705.622 1.632 1 2.646 1s1.94-.378 2.646-1M18 8A6 6 0 1 0 6 8c0 3.09-.78 5.206-1.65 6.605-.735 1.18-1.102 1.771-1.089 1.936.015.182.054.252.2.36.133.099.732.099 1.928.099H18.61c1.196 0 1.795 0 1.927-.098.147-.11.186-.179.2-.361.014-.165-.353-.755-1.088-1.936C18.78 13.206 18 11.09 18 8Z" />
+            </svg>
+            <span class="notif-badge" id="notif-badge">3</span>
+          </button>
+          <div class="notif-dropdown" id="notif-dropdown">
+            <div class="notif-header">
+              <span class="notif-title">Notifications</span>
+              <button class="notif-clear" id="notif-clear">Mark all read</button>
+            </div>
+            <ul class="notif-list" id="notif-list"></ul>
+          </div>
+        </div>
+        <div class="account-dropdown">
+          <button class="avatar-pill" id="account-toggle">?</button>
+          <div class="account-menu" id="account-menu">
+            <div class="account-info">
+              <div class="account-name">John Doe User</div>
+              <div class="account-meta">Central Region</div>
+            </div>
+            <hr class="menu-divider">
+            <button class="menu-item" id="logout-btn">
+              <svg viewBox="0 0 24 24" width="16" height="16"
+                style="margin-right:0.4rem;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:middle"
+                aria-hidden="true">
+                <path
+                  d="m16 17 5-5m0 0-5-5m5 5H9m0-9H7.8c-1.68 0-2.52 0-3.162.327a3 3 0 0 0-1.311 1.311C3 5.28 3 6.12 3 7.8v8.4c0 1.68 0 2.52.327 3.162a3 3 0 0 0 1.311 1.311C5.28 21 6.12 21 7.8 21H9" />
+              </svg> Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main class="section">
+    <div class="container dashboard">
+      <header class="page-header reveal">
+        <h1 class="page-title">Inventory Risk Overview</h1>
+        <p class="page-subtitle">
+          Live KPIs and AI-driven risk signals for your pharmaceutical inventory.
+        </p>
+      </header>
+      <section class="kpi-row reveal">
+        <article class="kpi-tile kpi-tile-blue">
+          <div class="kpi-icon-lg"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+              <path
+                d="M20.5 7.278 12 12m0 0L3.5 7.278M12 12v9.5m9-5.441V7.942c0-.343 0-.514-.05-.667a1 1 0 0 0-.215-.364c-.109-.119-.258-.202-.558-.368l-7.4-4.111c-.284-.158-.425-.237-.575-.267a1 1 0 0 0-.403 0c-.15.03-.292.11-.576.267l-7.4 4.11c-.3.167-.45.25-.558.369a1 1 0 0 0-.215.364C3 7.428 3 7.599 3 7.942v8.117c0 .342 0 .514.05.666a1 1 0 0 0 .215.364c.109.119.258.202.558.368l7.4 4.111c.284.158.425.237.576.268.133.027.27.027.402 0 .15-.031.292-.11.576-.268l7.4-4.11c.3-.167.45-.25.558-.369a.999.999 0 0 0 .215-.364c.05-.152.05-.324.05-.666ZM16.5 9.5l-9-5" />
+            </svg></div>
+          <div class="kpi-tile-label">Total Inventory</div>
+          <div class="kpi-tile-value" id="dash-total">—</div>
+        </article>
+        <article class="kpi-tile kpi-tile-red">
+          <div class="kpi-icon-lg"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+              <path
+                d="M12 9v4m0 4h.01M10.615 3.892 2.39 18.098c-.456.788-.684 1.182-.65 1.506a1 1 0 0 0 .406.705c.263.191.718.191 1.629.191h16.45c.91 0 1.365 0 1.628-.191a1 1 0 0 0 .407-.705c.034-.324-.195-.718-.65-1.506L13.383 3.892c-.454-.785-.681-1.178-.978-1.31a1 1 0 0 0-.813 0c-.296.132-.523.525-.978 1.31Z" />
+            </svg></div>
+          <div class="kpi-tile-label">Value at Risk</div>
+          <div class="kpi-tile-value" id="dash-var">—</div>
+        </article>
+        <article class="kpi-tile kpi-tile-green">
+          <div class="kpi-icon-lg"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+              <path
+                d="m22 7-7.869 7.869c-.396.396-.594.594-.822.668a1 1 0 0 1-.618 0c-.228-.074-.426-.272-.822-.668L9.13 12.13c-.396-.396-.594-.594-.822-.668a1 1 0 0 0-.618 0c-.228.074-.426.272-.822.668L2 17M22 7h-7m7 0v7" />
+            </svg></div>
+          <div class="kpi-tile-label">AI Savings Opp</div>
+          <div class="kpi-tile-value" id="dash-ai">—</div>
+        </article>
+        <article class="kpi-tile kpi-tile-orange">
+          <div class="kpi-icon-lg"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+              <path
+                d="M12 8v4m0 4h.01M2 8.523v6.954c0 .245 0 .367.028.482a1 1 0 0 0 .12.29c.061.1.148.187.32.36l4.923 4.922c.173.173.26.26.36.322.09.054.188.095.29.12.115.027.237.027.482.027h6.954c.245 0 .367 0 .482-.028a.998.998 0 0 0 .29-.12c.1-.061.187-.148.36-.32l4.922-4.923c.173-.173.26-.26.322-.36a.998.998 0 0 0 .12-.29c.027-.115.027-.237.027-.482V8.523c0-.245 0-.367-.028-.482a.998.998 0 0 0-.12-.29c-.061-.1-.148-.187-.32-.36L16.608 2.47c-.173-.173-.26-.26-.36-.322a1 1 0 0 0-.29-.12C15.844 2 15.722 2 15.477 2H8.523c-.245 0-.367 0-.482.028a1 1 0 0 0-.29.12c-.1.061-.187.148-.36.32L2.47 7.392c-.173.173-.26.26-.322.36a1 1 0 0 0-.12.29C2 8.156 2 8.278 2 8.523Z" />
+            </svg></div>
+          <div class="kpi-tile-label">At-Risk Batches</div>
+          <div class="kpi-tile-value" id="dash-risky-count">—</div>
+        </article>
+      </section>
+      <section class="grid-2 dashboard-lower">
+        <article class="card reveal" id="risky-card">
+          <div class="card-header">
+            <div class="card-title" style="display:flex;align-items:center;gap:0.4rem;">
+              <svg viewBox="0 0 24 24" width="16" height="16"
+                style="color:#ef4444;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0"
+                aria-hidden="true">
+                <path
+                  d="M12 8v4m0 4h.01M2 8.523v6.954c0 .245 0 .367.028.482a1 1 0 0 0 .12.29c.061.1.148.187.32.36l4.923 4.922c.173.173.26.26.36.322.09.054.188.095.29.12.115.027.237.027.482.027h6.954c.245 0 .367 0 .482-.028a.998.998 0 0 0 .29-.12c.1-.061.187-.148.36-.32l4.922-4.923c.173-.173.26-.26.322-.36a.998.998 0 0 0 .12-.29c.027-.115.027-.237.027-.482V8.523c0-.245 0-.367-.028-.482a.998.998 0 0 0-.12-.29c-.061-.1-.148-.187-.32-.36L16.608 2.47c-.173-.173-.26-.26-.36-.322a1 1 0 0 0-.29-.12C15.844 2 15.722 2 15.477 2H8.523c-.245 0-.367 0-.482.028a1 1 0 0 0-.29.12c-.1.061-.187.148-.36.32L2.47 7.392c-.173.173-.26.26-.322.36a1 1 0 0 0-.12.29C2 8.156 2 8.278 2 8.523Z" />
+              </svg>
+              Top 5 Risky Batches (Live)
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Product ID</th>
+                  <th>Category</th>
+                  <th>Days in Stock</th>
+                  <th>Locked Capital</th>
+                  <th>Dead Stock Risk</th>
+                  <th>Risk Level</th>
+                </tr>
+              </thead>
+              <tbody id="top-risky-table-body"></tbody>
+            </table>
+          </div>
+        </article>
+        <article class="card reveal">
+          <div class="card-header">
+            <div class="card-title">System Alerts</div>
+            <span class="alert-live-badge">LIVE</span>
+          </div>
+          <ul class="alerts-list" id="system-alerts-list"></ul>
+        </article>
+      </section>
+      <section class="section">
+        <div class="card reveal">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Search the dataset</div>
+              <div class="card-subtitle">
+                Use the search bar in the header to find products by ID or category.
+              </div>
+            </div>
+          </div>
+          <div id="search-results-inline" class="search-results"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+  <script src="app-v2.js"></script>
+</body>
+
+</html>
