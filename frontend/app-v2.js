@@ -549,4 +549,47 @@ document.addEventListener("DOMContentLoaded", async function () {
   initScrollClass();
   initWhatIf();
   initAccountMenu();
+  initSearchTutorial();
 });
+
+// ── SEARCH TUTORIAL HINT ──────────────────────────────────────────────────
+function initSearchTutorial() {
+  if (document.body.dataset.page !== 'dashboard') return;
+
+  // Show only once per session
+  if (sessionStorage.getItem('medistock-search-hint-shown')) return;
+
+  const wrapper = qs('.nav-search-wrapper');
+  const input = qs('#global-search');
+  if (!wrapper || !input) return;
+
+  const hint = document.createElement('div');
+  hint.className = 'search-hint';
+  hint.innerHTML = '✨ Search inventory by product or category';
+  wrapper.appendChild(hint);
+
+  // Entrance delay
+  setTimeout(() => {
+    hint.classList.add('visible');
+    hint.classList.add('animate');
+    sessionStorage.setItem('medistock-search-hint-shown', 'true');
+  }, 1200);
+
+  // Dismissal
+  const dismiss = () => {
+    hint.classList.remove('visible');
+    setTimeout(() => hint.remove(), 500);
+    input.removeEventListener('focus', dismiss);
+    document.removeEventListener('mousedown', checkOutside);
+  };
+
+  const checkOutside = (e) => {
+    if (!wrapper.contains(e.target)) dismiss();
+  };
+
+  input.addEventListener('focus', dismiss);
+  document.addEventListener('mousedown', checkOutside);
+
+  // Auto-dismiss after 8s
+  setTimeout(dismiss, 8000);
+}
